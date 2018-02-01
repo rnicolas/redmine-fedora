@@ -6,7 +6,7 @@ dnf -y update
 #ruby
 dnf install -y ruby ruby-devel ImageMagick-devel libxml2-devel gcc redhat-rpm-config
 #postgres
-dnf install -y postgresql-server postgresql-contrib
+dnf install -y postgresql-server postgresql-contrib postgresql-devel
 systemctl enable postgresql
 postgresql-setup --initdb --unit postgresql
 systemctl start postgresql
