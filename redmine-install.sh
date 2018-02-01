@@ -4,7 +4,7 @@ dnf -y install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-releas
 dnf -y update
 #as root or sudo
 #ruby
-dnf install -y ruby ruby-devel ImageMagick-devel libxml2-devel gcc redhat-rpm-config
+dnf install -y ruby ruby-devel ImageMagick-devel libxml2-devel gcc redhat-rpm-config rubygem-json
 #postgres
 dnf install -y postgresql-server postgresql-contrib postgresql-devel
 systemctl enable postgresql
@@ -44,20 +44,28 @@ cat > database.yml << EOF
 production:
   adapter: postgresql
   database: redmine
-  host: localhost
+  host: 127.0.0.1
   username: redmine
   password: $PG_REDMINE_PASSWD
+  encoding: utf8
 EOF
 
 popd
 gem install bundler
 /usr/local/bin/bundler install --without development test
 
+/usr/local/bin/rake generate_secret_token
+RAILS_ENV=production bundle exec rake db:migrate
+RAILS_ENV=production REDMINE_LANG=en bundle exec rake redmine:load_default_data
+ 
+
 echo "Check if the installation succeded"
 #bundle exec rails server -b 0.0.0.0 webrick -e production
 #This dependencies are necessary if passenger is installed via gem install passenger
 #dnf -y install httpd curl-devel httpd-devel openssl-devel apr-devel apr-util-devel
 dnf -y install httpd mod_passenger
+firewall-cmd --add-port=80/tcp
+firewall-cmd --permanent --add-port=80/tcp
 
 systemctl restart httpd
 
