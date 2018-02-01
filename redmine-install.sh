@@ -23,7 +23,7 @@ systemctl restart postgresql
 popd
 
 PG_REDMINE_PASSWD=$(openssl rand -base64 32)
-echo $PG_REDMINE_PASSWD
+#echo $PG_REDMINE_PASSWD
 
 pushd /tmp
 sudo -u postgres bash << EOF
@@ -39,8 +39,7 @@ mv -f redmine-3.4.4/ /opt/redmine
 cd /opt/redmine
 pushd config
 
-touch database.yml
-cat > database.yml << "EOF"
+cat > /opt/redmine/conf/database.yml << EOF
 production:
   adapter: postgresql
   database: redmine
@@ -54,7 +53,7 @@ gem install bundler
 /usr/local/bin/bundler install --without development test
 
 echo "Check if the installation succeded"
-bundle exec rails server -b 0.0.0.0 webrick -e production
+#bundle exec rails server -b 0.0.0.0 webrick -e production
 #This dependencies are necessary if passenger is installed via gem install passenger
 #dnf -y install httpd curl-devel httpd-devel openssl-devel apr-devel apr-util-devel
 dnf -y install httpd mod_passenger
@@ -86,3 +85,6 @@ EOF
 setsebool httpd_can_network_connect 1
 systemctl restart httpd
 setenforce 1
+
+echo "Password database for redmine"
+echo $PG_REDMINE_PASSWD
