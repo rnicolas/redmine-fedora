@@ -22,7 +22,7 @@ sed -i "s/host    all             all             127.0.0.1\/32            ident
 systemctl restart postgresql
 popd
 
-PG_REDMINE_PASSWD=$(openssl rand -base64 32)
+PG_REDMINE_PASSWD=$(openssl rand -base64 33)
 #echo $PG_REDMINE_PASSWD
 
 pushd /tmp
