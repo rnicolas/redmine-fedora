@@ -39,8 +39,8 @@ mv -f redmine-3.4.4/ /opt/redmine
 cd /opt/redmine
 pushd config
 
-touch /opt/redmine/conf/database.yml
-cat > /opt/redmine/conf/database.yml << EOF
+touch database.yml
+cat > database.yml << EOF
 production:
   adapter: postgresql
   database: redmine
