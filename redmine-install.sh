@@ -4,7 +4,7 @@ dnf -y install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-releas
 dnf -y update
 #as root or sudo
 #ruby
-dnf install -y ruby ruby-devel ImageMagick-devel libxml2-devel gcc
+dnf install -y ruby ruby-devel ImageMagick-devel libxml2-devel gcc redhat-rpm-config
 #postgres
 dnf install -y postgresql-server postgresql-contrib
 systemctl enable postgresql
@@ -39,7 +39,8 @@ mv -f redmine-3.4.4/ /opt/redmine
 cd /opt/redmine
 pushd config
 
-cat > ~/database.yml << "EOF"
+touch database.yml
+cat > database.yml << "EOF"
 production:
   adapter: postgresql
   database: redmine
