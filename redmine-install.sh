@@ -4,7 +4,7 @@ dnf -y install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-releas
 dnf -y update
 #as root or sudo
 #ruby
-dnf install -y ruby ruby-devel ImageMagick-devel
+dnf install -y ruby ruby-devel ImageMagick-devel libxml2-devel gcc
 #postgres
 dnf install -y postgresql-server postgresql-contrib
 systemctl enable postgresql
