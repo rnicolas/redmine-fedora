@@ -20,14 +20,18 @@ pushd /var/lib/pgsql/data
 sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" ./postgresql.conf
 sed -i "s/host    all             all             127.0.0.1\/32            ident/host    all             all             0.0.0.0\/0            md5/" ./pg_hba.conf
 systemctl restart postgresql
+popd
 
 PG_REDMINE_PASSWD=$(openssl rand -base64 32)
+echo $PG_REDMINE_PASSWD
 
-su - postgres bash << EOF
+pushd /tmp
+sudo -u postgres bash << EOF
 psql -c "CREATE ROLE redmine LOGIN ENCRYPTED PASSWORD '$PG_REDMINE_PASSWD' NOINHERIT VALID UNTIL 'infinity';"
 psql -c "CREATE DATABASE redmine WITH ENCODING='UTF8' OWNER=redmine;"
 EOF
-
+popd
+setenforce 0
 wget http://www.redmine.org/releases/redmine-3.4.4.tar.gz
 tar zxf redmine-3.4.4.tar.gz
 rm -f redmine-3.4.4.tar.gz
@@ -53,5 +57,31 @@ bundle exec rails server -b 0.0.0.0 webrick -e production
 #This dependencies are necessary if passenger is installed via gem install passenger
 #dnf -y install httpd curl-devel httpd-devel openssl-devel apr-devel apr-util-devel
 dnf -y install httpd mod_passenger
-sudo gem install bundler
-sudo /usr/local/bin/bundle install --without development test
+
+cat > /etc/httpd/conf/httpd.conf << "EOF"
+<VirtualHost *:80>
+   ServerName redmine.aeinnova.aei
+
+   DocumentRoot /var/www/html
+
+   Alias /redmine /opt/redmine
+
+   <Location /redmine>
+      PassengerBaseURI /redmine
+      PassengerAppRoot /opt/redmine
+   </Location>
+
+   <Directory /opt/redmine/public>
+      # This relaxes Apache security settings.
+      AllowOverride all
+      # MultiViews must be turned off.
+      Options -MultiViews
+      # Uncomment this if you're on Apache >= 2.4:
+      Require all granted
+   </Directory>
+</VirtualHost>
+EOF
+
+setsebool httpd_can_network_connect 1
+systemctl restart httpd
+setenforce 1
