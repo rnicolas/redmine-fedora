@@ -59,7 +59,10 @@ echo "Check if the installation succeded"
 #dnf -y install httpd curl-devel httpd-devel openssl-devel apr-devel apr-util-devel
 dnf -y install httpd mod_passenger
 
-cat > /etc/httpd/conf/httpd.conf << "EOF"
+chmod -R 755 /opt/redmine
+chown -R apache.apache /opt/redmine
+
+cat > /etc/httpd/conf.d/redmine.conf << "EOF"
 <VirtualHost *:80>
    ServerName redmine.aeinnova.aei
 
