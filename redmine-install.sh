@@ -59,6 +59,8 @@ echo "Check if the installation succeded"
 #dnf -y install httpd curl-devel httpd-devel openssl-devel apr-devel apr-util-devel
 dnf -y install httpd mod_passenger
 
+systemctl restart httpd
+
 chmod -R 755 /opt/redmine
 chown -R apache.apache /opt/redmine
 
