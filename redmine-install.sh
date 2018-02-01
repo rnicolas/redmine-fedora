@@ -37,6 +37,11 @@ tar zxf redmine-3.4.4.tar.gz
 rm -f redmine-3.4.4.tar.gz
 mv -f redmine-3.4.4/ /opt/redmine
 cd /opt/redmine
+
+chown apache:apache -R files log public/plugin_assets tmp
+chcon -R --reference=/var/www/html /opt/redmine
+chcon -t httpd_sys_content_rw_t -R files log public/plugin_assets tmp
+
 pushd config
 
 touch database.yml
@@ -75,10 +80,9 @@ chown -R apache.apache /opt/redmine
 cat > /etc/httpd/conf.d/redmine.conf << "EOF"
 <VirtualHost *:80>
    ServerName redmine.aeinnova.aei
+   PassengerRuby /usr/bin/ruby
 
-   DocumentRoot /var/www/html
-
-   Alias /redmine /opt/redmine
+   Alias /redmine /opt/redmine/public
 
    <Location /redmine>
       PassengerBaseURI /redmine
