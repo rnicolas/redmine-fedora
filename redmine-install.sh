@@ -72,7 +72,7 @@ dnf -y install httpd mod_passenger
 firewall-cmd --add-port=80/tcp
 firewall-cmd --permanent --add-port=80/tcp
 
-systemctl restart httpd
+systemctl enable httpd
 
 chmod -R 755 /opt/redmine
 chown -R apache.apache /opt/redmine
