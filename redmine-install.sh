@@ -38,10 +38,6 @@ rm -f redmine-3.4.4.tar.gz
 mv -f redmine-3.4.4/ /opt/redmine
 cd /opt/redmine
 
-chown apache:apache -R files log public/plugin_assets tmp
-chcon -R --reference=/var/www/html /opt/redmine
-chcon -t httpd_sys_content_rw_t -R files log public/plugin_assets tmp
-
 pushd config
 
 touch database.yml
@@ -99,6 +95,11 @@ cat > /etc/httpd/conf.d/redmine.conf << "EOF"
    </Directory>
 </VirtualHost>
 EOF
+
+pushd /opt/redmine
+chown apache:apache -R files log public/plugin_assets tmp
+chcon -R --reference=/var/www/html /opt/redmine
+chcon -t httpd_sys_content_rw_t -R files log public/plugin_assets tmp
 
 setsebool httpd_can_network_connect 1
 systemctl restart httpd
