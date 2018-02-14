@@ -105,5 +105,12 @@ setsebool httpd_can_network_connect 1
 systemctl restart httpd
 setenforce 1
 
+pushd public/themes
+wget https://github.com/Nitrino/flatly_light_redmine/archive/master.zip
+unzip master.zip
+rm master.zip
+mv flatly_light_redmine-master/ flatly_light
+
+
 echo "Password database for redmine"
 echo $PG_REDMINE_PASSWD
