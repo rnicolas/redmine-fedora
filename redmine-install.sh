@@ -32,10 +32,10 @@ psql -c "CREATE DATABASE redmine WITH ENCODING='UTF8' OWNER=redmine;"
 EOF
 popd
 setenforce 0
-wget http://www.redmine.org/releases/redmine-3.4.4.tar.gz
-tar zxf redmine-3.4.4.tar.gz
-rm -f redmine-3.4.4.tar.gz
-mv -f redmine-3.4.4/ /opt/redmine
+wget http://www.redmine.org/releases/redmine-3.4.6.tar.gz
+tar zxf redmine-3.4.6.tar.gz
+rm -f redmine-3.4.6.tar.gz
+mv -f redmine-3.4.6/ /opt/redmine
 cd /opt/redmine
 
 pushd config
